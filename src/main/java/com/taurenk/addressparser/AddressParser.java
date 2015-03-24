@@ -51,6 +51,8 @@ public class AddressParser {
         System.out.println("After State: <" + addr + ">");
         
         /* Extracting City is a bit more difficult
+            1 meadow ave east meadow ny 11554 -> is it East Meadow or Meadow ny?
+            * there are 43k zip/city combos in the GeoNames File
             find_place algorithm
             By here we either do or do not have a zip code
             Case 1: Zip code is matched in DB with city name
