@@ -1,7 +1,6 @@
 package com.taurenk.addressparser;
 
 import com.taurenk.addressparser.library.StandardsLibrary;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,6 +49,22 @@ public class AddressParser {
 
         addr = extractState(addr);
         System.out.println("After State: <" + addr + ">");
+        
+        /* Extracting City is a bit more difficult
+            find_place algorithm
+            By here we either do or do not have a zip code
+            Case 1: Zip code is matched in DB with city name
+                1a. IF city name matches [fuzzy or strict] with place: THEN extract city
+                1b. IF city name != match: THEN ??
+            Case 2: Zip Code is not matched to DB
+            
+            Case 1b and 2 end up in the same scenario:
+                'Guess City' -> can do this based on extracting
+                    - last 3 of words in address string
+                    - last 2 of words in address string
+                    - last 1 of words in address string
+                Try to match that against DB
+        */
     }
 
     /**
