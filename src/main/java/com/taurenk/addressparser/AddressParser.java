@@ -1,6 +1,6 @@
 package com.taurenk.addressparser;
 
-import com.taurenk.addressparser.library.StandardsLibrary;
+import com.taurenk.addressparser.library.AddressUtility;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,19 +14,15 @@ import java.util.regex.Pattern;
 public class AddressParser {
 
     private Address address;
-    private StandardsLibrary standardsLibrary;
-
-    private String zipRegex = "(\\d{5}(-\\d{4})?)";
-    private String numRegex = "(^\\d+)";
+    private AddressUtility addressUtilities;
 
     /**
      * Set standardsLibrary [only load it once, during startup as file IO is involved]
      * @param addrString
-     * @param standardsLibrary
      */
-    public AddressParser(String addrString, StandardsLibrary standardsLibrary) {
+    public AddressParser(String addrString, AddressUtility addressUtilities) {
         this.address = new Address(addrString);
-        this.standardsLibrary = standardsLibrary;
+        this.addressUtilities = addressUtilities;
     }
 
     /**
@@ -50,23 +46,8 @@ public class AddressParser {
         addr = extractState(addr);
         System.out.println("After State: <" + addr + ">");
         
-        /* Extracting City is a bit more difficult
-            1 meadow ave east meadow ny 11554 -> is it East Meadow or Meadow ny?
-            * there are 43k zip/city combos in the GeoNames File
-            find_place algorithm
-            By here we either do or do not have a zip code
-            Case 1: Zip code is matched in DB with city name
-                1a. IF city name matches [fuzzy or strict] with place: THEN extract city
-                1b. IF city name != match: THEN ??
-            Case 2: Zip Code is not matched to DB
-            
-            Case 1b and 2 end up in the same scenario:
-                'Guess City' -> can do this based on extracting
-                    - last 3 of words in address string
-                    - last 2 of words in address string
-                    - last 1 of words in address string
-                Try to match that against DB
-        */
+        // Extracting City is a bit more difficult
+
     }
 
     /**
@@ -91,8 +72,7 @@ public class AddressParser {
      */
     public String extractZip(String addressString) {
 
-        Pattern r = Pattern.compile(this.zipRegex);
-        Matcher m = r.matcher(addressString);
+        Matcher m = addressUtilities.getZipRegex().matcher(addressString);
 
         if (m.find( )) {
             System.out.println("\tZip Match: <" + m.group(0) +">" );
@@ -112,9 +92,7 @@ public class AddressParser {
      * @return
      */
     public String extractNumber(String addressString) {
-        Pattern r = Pattern.compile(this.numRegex);
-        Matcher m = r.matcher(addressString);
-
+        Matcher m = addressUtilities.getNumRegex().matcher(addressString);
         if (m.find( )) {
             System.out.println("\tNumber Match: <" + m.group(0) + ">");
             this.address.setNumber(m.group(0).trim());
@@ -133,8 +111,7 @@ public class AddressParser {
      * @return
      */
     public String extractState(String addressString) {
-        Pattern r = this.standardsLibrary.getUs_states_regex();
-        Matcher m = r.matcher(addressString);
+        Matcher m = addressUtilities.getStateRegex().matcher(addressString);
         if (m.find( )) {
             System.out.println("\tStates Match: <" + m.group(0) + ">");
             this.address.setState(m.group(0).trim());

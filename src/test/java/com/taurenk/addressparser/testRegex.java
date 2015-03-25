@@ -1,7 +1,7 @@
 package com.taurenk.addressparser;
 
 
-import com.taurenk.addressparser.library.StandardsLibrary;
+import com.taurenk.addressparser.library.AddressUtility;
 
 /**
  * Created by tauren on 3/22/15.
@@ -9,7 +9,7 @@ import com.taurenk.addressparser.library.StandardsLibrary;
 public class testRegex {
 
     public static void main(String[] args) {
-       StandardsLibrary regexLib = new StandardsLibrary();
+        AddressUtility addressUtility = new AddressUtility();
 
 
     }
